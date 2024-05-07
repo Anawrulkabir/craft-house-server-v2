@@ -1,5 +1,6 @@
 const { MongoClient, ServerApiVersion, ObjectId, Object } = require('mongodb')
 require('dotenv').config()
+const jwt = require('jsonwebtoken')
 const express = require('express')
 const cors = require('cors')
 const app = express()
@@ -47,6 +48,15 @@ async function run() {
       .collection('favourite_item_data')
 
     const cartItem = client.db('Craft_House').collection('cart_item_data')
+
+    // jwt token create api
+    app.post('/jwt', async (req, res) => {
+      const user = req.body
+      console.log(user)
+
+      const token = jwt.sign(user, 'secret', { expiresIn: '1h' })
+      res.send(token)
+    })
 
     // post all_public_data into server
     app.post('/items', async (req, res) => {
